@@ -9,7 +9,7 @@ This package contains all service modules for the AI PR Reviewer:
 """
 
 from app.services.github_auth import get_github_auth, GitHubAppAuth, GitHubAuthError
-from app.services.github_client import get_github_client, GitHubClient, GitHubAPIError
+from app.services.github_client import GitHubClient, GitHubAPIError
 from app.services.diff_parser import get_diff_parser, DiffParser, DiffParserError
 from app.services.ai_engine import get_ai_engine, AIReviewEngine, AIReviewError
 
@@ -34,3 +34,4 @@ __all__ = [
     "AIReviewEngine",
     "AIReviewError",
 ]
+
