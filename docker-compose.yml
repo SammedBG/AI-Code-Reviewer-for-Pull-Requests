@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  ai-pr-reviewer:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ai-pr-reviewer
+    ports:
+      - "${PORT:-8000}:8000"
+    environment:
+      - GITHUB_APP_ID=${GITHUB_APP_ID}
+      - GITHUB_PRIVATE_KEY=${GITHUB_PRIVATE_KEY}
+      - GITHUB_WEBHOOK_SECRET=${GITHUB_WEBHOOK_SECRET}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - OPENAI_MODEL=${OPENAI_MODEL:-gpt-4-turbo-preview}
+      - MAX_PR_FILES=${MAX_PR_FILES:-50}
+      - MAX_DIFF_LINES=${MAX_DIFF_LINES:-500}
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
+      - LOG_JSON_FORMAT=${LOG_JSON_FORMAT:-true}
+    volumes:
+      - ./private-key.pem:/app/private-key.pem:ro
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import httpx; httpx.get('http://localhost:8000/health')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1G
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+
+networks:
+  default:
+    name: ai-pr-reviewer-network
