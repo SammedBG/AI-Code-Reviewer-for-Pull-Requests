@@ -2,8 +2,15 @@
 Application Runner
 
 This script is the entry point for running the application.
-Use: python -m run
+Use: python run.py
 """
+
+import sys
+from pathlib import Path
+
+# Add project root to Python path to enable 'app' module imports
+project_root = Path(__file__).parent.absolute()
+sys.path.insert(0, str(project_root))
 
 import uvicorn
 
